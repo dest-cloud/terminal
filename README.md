@@ -1,6 +1,6 @@
 # terminal
 
-Terminal with list of predefined commands. Create your list of commands, the variables that you want to replace and you
+Terminal with list of predefined commands. Create your list of commands, the variables that you want to replace, and you
 are good to run your favourite commands all the time.
 
 # Install
@@ -47,18 +47,18 @@ are good to run your favourite commands all the time.
 java -jar terminal-1.0-SNAPSHOT.jar
 ```
 
-In the 'Configs' menu select your variables.json file. Your first command should be available in the list. If you run
+In the 'Configs' menu select your variables.json file. Your first command should be available in the list. As soon as you run
 your command you should see the list of files in '.console'.
 
 # Variables
 
 In your '.console' directory you can create as many json files as you want. A good practice is to make a directory when
-you want to create multiple profiles for a same command file. For instance, if you have to projects that needs to run
+you want to create multiple profiles for a same command file. For instance, if you have two projects that needs to run
 the same commands but in different directories or with different versions you can create one command file and multiple
 variable files.
 
-The hierarchy in the '.console' directory will be available in the 'Configs' menu. When you select a json file it will
-be loaded with the corresponding command file. The commands will be loaded in the list and the variables will be
+The hierarchy in the '.console' directory will be available in the 'Configs' menu. As soon as you select a json file it will
+be loaded with the corresponding command file. The commands will be loaded in the list, and the variables will be
 replaced in the commands.
 
 Example of variables:
@@ -108,7 +108,7 @@ want to execute the command. In a variable file you can set the title that will 
 # Commands
 
 A command file defines a set of commands that can be executed in the terminal. The command file needs to have a '.json'
-extension but it can be stored anywhere as long as it is correctly referenced in a variable file.
+extension, but it can be stored anywhere as long as it is correctly referenced in a variable file.
 
 ```json
 [
@@ -134,7 +134,7 @@ extension but it can be stored anywhere as long as it is correctly referenced in
 
 ## Replace variable in command
 In the command attribute of a command you can set a token to replace the token with the corresponding value.
-If your variable is called myVar and the value '/home/me'
+If your variable is called myVar, and the value '/home/me'
 ```json
 ...
  "command": "cd ${myVar}"
@@ -148,7 +148,7 @@ When you load the variables, the command will be replaced (in memory not in the 
 ```
 
 ## Undefined variable
-If a token in a command is not found among the variables, an dialog will ask you to set the value when you run the command.
+If a token in a command is not found among the variables, a dialog will ask you to set the value when you run the command.
 This is very powerful if you need to execute a command and need to ask the user some information that can change everytime.
 For instance, the following command:
 ```json
@@ -159,7 +159,7 @@ For instance, the following command:
 If no variable is called message, a dialog will ask everytime the user to set a message when committing in git.
 
 ## Reusing the same terminal
-If you want to execute many commands in the same terminal simply set the attribute consoleId with a same id.
+In case you want to execute many commands in the same terminal simply set the attribute consoleId with a same id.
 ```json
 ...
  "consoleId": "term1"
@@ -168,17 +168,17 @@ If you want to execute many commands in the same terminal simply set the attribu
 Every command that will have the consoleId 'term1' will be executed in the same terminal. When you run a command for the first time, the terminal will be opened.
 The next time, the terminal will be selected automatically.
 
-The same works if you double click on a command or if you type its alias in the text field in the bottom.
+The same works if you double-click on a command or if you type its alias in the text field in the bottom.
 
 # Text field in the bottom
 The text field in the bottom is there to offer an interesting alternative to double-clicking the commands in the list or directly typing in the terminals.
-You can either type any command and it will be executed in the selected terminal. Or you can type an alias of a command set by:
+You can either type any command, and it will be executed in the selected terminal. Or you can type an alias of a command set by:
 ```json
 ...
  "alias": "myAlias"
 ...
 ```
-This way, if you type myAlias in the textfield, the corresponding command will be executed in the right terminal (if consoleId is set).
+This way, if you type myAlias in the text field, the corresponding command will be executed in the right terminal (if consoleId is set).
 It offers a fast way to run lots of commands.
 
-An alias works the same as double-clicking a command in the list, the variables will be replaced as well or a dialog will ask you to set the undefined variables.
+An alias works the same as double-clicking a command in the list, the variables will be replaced as well, or a dialog will ask you to set the undefined variables.
