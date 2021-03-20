@@ -48,9 +48,9 @@
                 <version>0.0.3</version>
                 <configuration>
                     <release>${maven.compiler.release}</release>
-                    <jlinkImageName>consoleFX</jlinkImageName>
+                    <jlinkImageName>terminal</jlinkImageName>
                     <launcher>launcher</launcher>
-                    <mainClass>consoleFX/cloud.dest.terminal.MainApp</mainClass>
+                    <mainClass>terminal/cloud.dest.terminal.MainApp</mainClass>
                 </configuration>
             </plugin>
         </plugins>
