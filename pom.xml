@@ -11,7 +11,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <maven.compiler.release>16</maven.compiler.release>
+        <maven.compiler.release>15</maven.compiler.release>
         <javafx.version>15.0.1</javafx.version>
         <mainClass>cloud.dest.terminal.MainClass</mainClass>
         <moduleName>terminal</moduleName>

@@ -46,6 +46,7 @@ public class FXMLController {
     private TabPane tabPane;
 
     private List<Config> configs;
+    private List<Command> commandCache;
 
     public FXMLController() {
         appData = AppData.instance;
@@ -53,6 +54,7 @@ public class FXMLController {
         terminalService = appData.getTerminalService();
         variableService = appData.getVariableService();
         configService = appData.getConfigService();
+        commandCache = new ArrayList<>();
     }
 
     public void initialize() {
@@ -194,12 +196,16 @@ public class FXMLController {
     }
 
     private void loadConfig() {
+        commandCache.clear();
         commandList.getItems().clear();
         for (CommandList commands : appData.getEnvironment().getCommandLists()) {
-            commands.getCommands().forEach(command -> commandList.getItems().add(command.getName() + " (" + command.getAlias() + ")"));
+            commands.getCommands().forEach(command -> {
+                commandList.getItems().add(command.getName() + " (" + command.getAlias() + ")");
+                commandCache.add(command);
+            });
             commandList.setOnMouseClicked(click -> {
                 if (click.getClickCount() == 2) {
-                    Command command = commands.getCommands().get(commandList.getSelectionModel().getSelectedIndex());
+                    Command command = commandCache.get(commandList.getSelectionModel().getSelectedIndex());
                     execCommandInRightTerminal(tabPane, command);
                 }
             });
