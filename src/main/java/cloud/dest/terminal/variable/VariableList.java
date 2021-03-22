@@ -1,4 +1,4 @@
-package cloud.dest.terminal;
+package cloud.dest.terminal.variable;
 
 import java.util.ArrayList;
 import java.util.List;

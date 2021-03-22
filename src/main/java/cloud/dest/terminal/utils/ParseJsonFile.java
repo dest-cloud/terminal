@@ -1,4 +1,4 @@
-package cloud.dest.terminal;
+package cloud.dest.terminal.utils;
 
 import cloud.dest.terminal.command.Command;
 import cloud.dest.terminal.variable.Variable;
@@ -10,6 +10,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ParseJsonFile {
+
+    private ParseJsonFile() {
+    }
 
     public static List<Command> readCommands(String absoluteFile) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();

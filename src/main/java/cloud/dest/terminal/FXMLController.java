@@ -1,5 +1,14 @@
 package cloud.dest.terminal;
 
+import cloud.dest.terminal.command.Command;
+import cloud.dest.terminal.command.CommandList;
+import cloud.dest.terminal.command.CommandService;
+import cloud.dest.terminal.config.ConfigService;
+import cloud.dest.terminal.terminal.OpenerCallBack;
+import cloud.dest.terminal.terminal.Terminal;
+import cloud.dest.terminal.terminal.TerminalService;
+import cloud.dest.terminal.variable.Variable;
+import cloud.dest.terminal.variable.VariableService;
 import com.kodedu.terminalfx.TerminalTab;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -9,9 +18,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,23 +37,27 @@ public class FXMLController {
     @FXML
     private Menu configMenu;
 
+    private final AppData appData;
+    private final CommandService commandService;
+    private final TerminalService terminalService;
+    private final VariableService variableService;
+    private final ConfigService configService;
+
     private TabPane tabPane;
-    private TerminalList terminalList;
-    private CommandList commands;
-    private VariableList variables;
+
     private List<Config> configs;
-    private Config currentConfig;
 
     public FXMLController() {
-        currentConfig = null;
+        appData = AppData.instance;
+        commandService = appData.getCommandService();
+        terminalService = appData.getTerminalService();
+        variableService = appData.getVariableService();
+        configService = appData.getConfigService();
     }
 
     public void initialize() {
         tabPane = new TabPane();
-        terminalList = new TerminalList();
-        commands = new CommandList();
-        variables = new VariableList();
-        configs = loadConfigs(new ArrayList<>(), Paths.get(System.getProperty("user.home"), ".console"));
+        configs = loadConfigs(new ArrayList<>(), appData.getEnvironment().getDir());
 
         buildConfigMenu(configs, configMenu);
 
@@ -57,14 +68,14 @@ public class FXMLController {
     public void onEnter(KeyEvent event) {
         if (event.getCode() == KeyCode.ENTER) {
             String command = commandField.getText();
-            Command alias = findAlias(command);
-            if (alias != null) {
-                execCommandInRightTerminal(tabPane, alias);
+            Optional<Command> alias = commandService.findAlias(appData.getEnvironment(), command);
+            if (alias.isPresent()) {
+                execCommandInRightTerminal(tabPane, alias.get());
                 commandField.setText("");
             } else {
                 TerminalTab terminalTab = (TerminalTab) tabPane.getSelectionModel().getSelectedItem();
                 if (terminalTab != null) {
-                    sendCommand(terminalTab, command);
+                    commandService.sendCommand(terminalTab, command, this::resolveVariable);
                     commandField.setText("");
                 }
             }
@@ -73,10 +84,10 @@ public class FXMLController {
 
     @FXML
     public void newTerminal(ActionEvent event) {
-        Terminal terminal = terminalList.getOrOpen("term" + tabPane.getTabs().size() + 1, "Terminal " + tabPane.getTabs().size() + 1);
-        addClosingEvent(terminal);
-        tabPane.getTabs().add(terminal.getTerminalTab());
-        tabPane.getSelectionModel().select(terminal.getTerminalTab());
+        openTerminal("term" + (tabPane.getTabs().size() + 1), "Terminal " + (tabPane.getTabs().size() + 1), (terminal, isNew) -> {
+            tabPane.getTabs().add(terminal.getTerminalTab());
+            tabPane.getSelectionModel().select(terminal.getTerminalTab());
+        });
     }
 
     @FXML
@@ -86,9 +97,14 @@ public class FXMLController {
 
     @FXML
     public void reloadConfig(ActionEvent event) {
-        if (currentConfig != null) {
-            loadVariable(currentConfig);
-        }
+        appData.reloadEnv();
+    }
+
+    private void openTerminal(String id, String name, OpenerCallBack callBack) {
+        terminalService.openTerminal(appData.getEnvironment().getTerminalList(), id, name, (terminal, isNew) -> {
+            addClosingEvent(terminal);
+            callBack.openerCallBack(terminal, isNew);
+        });
     }
 
     private void buildConfigMenu(List<Config> configs, Menu menu) {
@@ -98,8 +114,8 @@ public class FXMLController {
             if (config.getType().equals("file")) {
                 item = new MenuItem(config.getConfig());
                 item.setOnAction(t -> {
-                    currentConfig = config;
-                    loadVariable(config);
+                    configService.loadConfig(appData.getEnvironment(), config);
+                    loadConfig();
                 });
                 menu.getItems().add(item);
             } else {
@@ -111,10 +127,13 @@ public class FXMLController {
     }
 
     private void execCommandInRightTerminal(TabPane tabPane, Command command) {
-        Variable title = findVar(variables.getVariables(), "TITLE:" + command.getConsoleId());
-        Terminal terminal = terminalList.getOrOpen(command.getConsoleId(), title != null && !title.getValue().isBlank() ? title.getValue() : command.getConsoleId());
-        if (terminal != null) {
-            addClosingEvent(terminal);
+        Optional<Variable> optTitle = variableService.findVar(appData.getEnvironment(), "TITLE:" + command.getConsoleId());
+        String title = command.getConsoleId();
+        if (optTitle.isPresent() && optTitle.get().getValue() != null && !optTitle.get().getValue().isBlank()) {
+            title = optTitle.get().getValue();
+        }
+
+        openTerminal(command.getConsoleId(), title, (terminal, isNew) -> {
             TerminalTab terminalTab = findTab(tabPane, command.getConsoleId());
             if (terminalTab != null) {
                 tabPane.getSelectionModel().select(terminalTab);
@@ -122,13 +141,13 @@ public class FXMLController {
                 tabPane.getTabs().add(terminal.getTerminalTab());
                 tabPane.getSelectionModel().select(terminal.getTerminalTab());
             }
-            sendCommand(terminal.getTerminalTab(), command.getCommand());
-        }
+            commandService.sendCommand(terminal.getTerminalTab(), command.getCommand(), this::resolveVariable);
+        });
     }
 
     private void addClosingEvent(Terminal terminal) {
         terminal.getTerminalTab().setOnCloseRequest(event1 -> {
-            terminalList.closeTerminal(terminal);
+            terminalService.closeTerminal(appData.getEnvironment().getTerminalList(), terminal);
         });
     }
 
@@ -142,42 +161,12 @@ public class FXMLController {
         return null;
     }
 
-    private Command findAlias(String alias) {
-        for (Command command : commands.getCommands()) {
-            if (command.getAlias().equals(alias)) {
-                return command;
-            }
-        }
-        return null;
-    }
-
-    private void sendCommand(TerminalTab terminalTab, String command) {
-        if (command.contains("${")) {
-            resolveVariable(terminalTab, command);
-        } else {
-            terminalTab.onTerminalFxReady(() -> terminalTab.getTerminal().command(command + "\r"));
-        }
-    }
-
-    private void resolveVariable(TerminalTab terminalTab, String command) {
-        int pos1 = command.indexOf("${");
-        int pos2 = command.indexOf("}", pos1);
-        String var = command.substring(pos1 + 2, pos2);
+    private Optional<String> resolveVariable(String var) {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Argument required");
         dialog.setHeaderText("An arugment is required, please enter the following value");
         dialog.setContentText("Value for \"" + var + "\"");
-
-        Optional<String> result = dialog.showAndWait();
-        result.ifPresent(value -> sendCommand(terminalTab, command.replace("${" + var + "}", value)));
-    }
-
-    private void replaceVars(List<Command> commands, List<Variable> vars) {
-        for (Command command : commands) {
-            for (Variable var : vars) {
-                command.setCommand(command.getCommand().replace("${" + var.getVariable() + "}", var.getValue()));
-            }
-        }
+        return dialog.showAndWait();
     }
 
     private List<Config> loadConfigs(List<Config> configs, Path dir) {
@@ -200,34 +189,17 @@ public class FXMLController {
         return configs;
     }
 
-    private void loadVariable(Config config) {
-        try {
-            variables.setNewVariables(ParseJsonFile.readVariables(config.getAbsolutePath()));
-            Variable commandFile = findVar(variables.getVariables(), "COMMAND_FILE");
-            commandList.getItems().clear();
-            if (commandFile != null) {
-                commands.setNewList(ParseJsonFile.readCommands(commandFile.getValue()));
-                commands.getCommands().forEach(command -> commandList.getItems().add(command.getName() + " (" + command.getAlias() + ")"));
-                commandList.setOnMouseClicked(click -> {
-                    if (click.getClickCount() == 2) {
-                        Command command = commands.getCommands().get(commandList.getSelectionModel().getSelectedIndex());
-                        execCommandInRightTerminal(tabPane, command);
-                    }
-                });
-            }
-            replaceVars(commands.getCommands(), variables.getVariables());
-        } catch (IOException e) {
-            e.printStackTrace();
+    private void loadConfig() {
+        commandList.getItems().clear();
+        for (CommandList commands : appData.getEnvironment().getCommandLists()) {
+            commands.getCommands().forEach(command -> commandList.getItems().add(command.getName() + " (" + command.getAlias() + ")"));
+            commandList.setOnMouseClicked(click -> {
+                if (click.getClickCount() == 2) {
+                    Command command = commands.getCommands().get(commandList.getSelectionModel().getSelectedIndex());
+                    execCommandInRightTerminal(tabPane, command);
+                }
+            });
         }
-    }
-
-    private Variable findVar(List<Variable> variables, String var) {
-        for (Variable variable : variables) {
-            if (variable.getVariable().equals(var)) {
-                return variable;
-            }
-        }
-        return null;
     }
 
 }

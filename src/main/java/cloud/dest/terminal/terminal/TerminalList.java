@@ -1,4 +1,4 @@
-package cloud.dest.terminal.terminalmanager;
+package cloud.dest.terminal.terminal;
 
 import java.util.ArrayList;
 import java.util.List;

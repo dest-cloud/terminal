@@ -1,4 +1,4 @@
-package cloud.dest.terminal.terminalmanager;
+package cloud.dest.terminal.terminal;
 
 import com.kodedu.terminalfx.TerminalBuilder;
 import com.kodedu.terminalfx.TerminalTab;
