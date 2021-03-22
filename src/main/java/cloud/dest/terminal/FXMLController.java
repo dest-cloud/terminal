@@ -98,13 +98,17 @@ public class FXMLController {
     @FXML
     public void reloadConfig(ActionEvent event) {
         appData.reloadEnv();
+        configs = loadConfigs(new ArrayList<>(), appData.getEnvironment().getDir());
+        configMenu.getItems().clear();
+        buildConfigMenu(configs, configMenu);
+        loadConfig();
     }
 
     private void openTerminal(String id, String name, OpenerCallBack callBack) {
-        terminalService.openTerminal(appData.getEnvironment().getTerminalList(), id, name, (terminal, isNew) -> {
+        terminalService.openTerminal(appData.getEnvironment(), id, name, (terminal, isNew) -> {
             addClosingEvent(terminal);
             callBack.openerCallBack(terminal, isNew);
-        });
+        }, this::resolveVariable);
     }
 
     private void buildConfigMenu(List<Config> configs, Menu menu) {
@@ -147,7 +151,7 @@ public class FXMLController {
 
     private void addClosingEvent(Terminal terminal) {
         terminal.getTerminalTab().setOnCloseRequest(event1 -> {
-            terminalService.closeTerminal(appData.getEnvironment().getTerminalList(), terminal);
+            terminalService.closeTerminal(appData.getEnvironment(), terminal);
         });
     }
 

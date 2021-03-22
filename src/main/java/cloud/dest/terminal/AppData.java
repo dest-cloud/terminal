@@ -36,8 +36,8 @@ public class AppData {
 
     private AppData() {
         commandService = new CommandServiceImpl();
-        terminalService = new TerminalServiceImpl();
         variableService = new VariableServiceImpl();
+        terminalService = new TerminalServiceImpl(variableService, commandService);
         environmentService = new EnvironmentServiceImpl(variableService);
         configService = new ConfigServiceImpl(variableService, commandService);
         environment = environmentService.initEnv("Default", DEFAULT_DIR);

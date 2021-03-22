@@ -23,6 +23,7 @@ public class VariableServiceImpl implements VariableService {
         return systemVariables;
     }
 
+    @Override
     public Optional<Variable> findVar(Environment environment, String var) {
         for (VariableList variables : environment.getVariableLists()) {
             for (Variable variable : variables.getVariables()) {
@@ -34,6 +35,20 @@ public class VariableServiceImpl implements VariableService {
         return Optional.empty();
     }
 
+    @Override
+    public List<Variable> findVars(Environment environment, String var) {
+        List<Variable> variables = new ArrayList<>();
+        for (VariableList variableList : environment.getVariableLists()) {
+            for (Variable variable : variableList.getVariables()) {
+                if (variable.getVariable().equals(var)) {
+                    variables.add(variable);
+                }
+            }
+        }
+        return variables;
+    }
+
+    @Override
     public VariableList loadVariables(Config config) {
         VariableList variables = new VariableList();
         try {

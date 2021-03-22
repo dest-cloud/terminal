@@ -18,5 +18,7 @@ public interface VariableService {
 
     Optional<Variable> findVar(Environment environment, String var);
 
+    List<Variable> findVars(Environment environment, String var);
+
     VariableList loadVariables(Config config);
 }
