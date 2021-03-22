@@ -1,4 +1,4 @@
-package cloud.dest.terminal;
+package cloud.dest.terminal.terminalmanager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,18 +11,18 @@ public class TerminalList {
         terminals = new ArrayList<>();
     }
 
-    public Terminal getOrOpen(String id) {
-        return getOrOpen(id, id);
+    public void getOrOpen(String id, OpenerCallBack callBack) {
+        getOrOpen(id, id, callBack);
     }
 
-    public Terminal getOrOpen(String id, String name) {
+    public void getOrOpen(String id, String name, OpenerCallBack callBack) {
         int pos = indexOf(id);
         if (pos >= 0) {
-            return terminals.get(pos);
+            callBack.openerCallBack(terminals.get(pos), false);
         } else {
             Terminal terminal = new Terminal(id, name);
             terminals.add(terminal);
-            return terminal;
+            callBack.openerCallBack(terminal, true);
         }
     }
 

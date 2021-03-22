@@ -1,5 +1,7 @@
 package cloud.dest.terminal;
 
+import cloud.dest.terminal.command.Command;
+import cloud.dest.terminal.variable.Variable;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
