@@ -7,6 +7,7 @@ module terminal {
     requires com.fasterxml.jackson.databind;
 
     opens cloud.dest.terminal to javafx.fxml;
+    opens cloud.dest.terminal.ui.vareditor to javafx.fxml;
     exports cloud.dest.terminal;
     exports cloud.dest.terminal.variable;
     exports cloud.dest.terminal.command;

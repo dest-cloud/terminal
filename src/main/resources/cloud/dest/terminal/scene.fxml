@@ -42,9 +42,17 @@
                     <menus>
                         <Menu mnemonicParsing="false" text="File">
                             <items>
-                                <MenuItem fx:id="newTermMenu" onAction="#newTerminal" mnemonicParsing="false" text="New terminal"/>
-                                <MenuItem fx:id="reloadMenu" onAction="#reloadConfig" mnemonicParsing="false" text="Reload config"/>
-                                <MenuItem fx:id="quitMenu" onAction="#quit" mnemonicParsing="false" text="Quit"/>
+                                <MenuItem fx:id="newTermMenu" mnemonicParsing="false" onAction="#newTerminal"
+                                          text="New terminal"/>
+                                <MenuItem fx:id="reloadMenu" mnemonicParsing="false" onAction="#reloadConfig"
+                                          text="Reload config"/>
+                                <MenuItem fx:id="quitMenu" mnemonicParsing="false" onAction="#quit" text="Quit"/>
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Edit">
+                            <items>
+                                <MenuItem onAction="#editVars" mnemonicParsing="false" text="Variables"/>
+                                <MenuItem onAction="#editCommands" mnemonicParsing="false" text="Commands"/>
                             </items>
                         </Menu>
                         <Menu fx:id="configMenu" mnemonicParsing="false" text="Configs">

@@ -7,17 +7,24 @@ import cloud.dest.terminal.config.ConfigService;
 import cloud.dest.terminal.terminal.OpenerCallBack;
 import cloud.dest.terminal.terminal.Terminal;
 import cloud.dest.terminal.terminal.TerminalService;
+import cloud.dest.terminal.ui.vareditor.VarEditorWindow;
 import cloud.dest.terminal.variable.Variable;
 import cloud.dest.terminal.variable.VariableService;
 import com.kodedu.terminalfx.TerminalTab;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -104,6 +111,16 @@ public class FXMLController {
         configMenu.getItems().clear();
         buildConfigMenu(configs, configMenu);
         loadConfig();
+    }
+
+    @FXML
+    public void editVars(ActionEvent event) {
+        new VarEditorWindow();
+    }
+
+    @FXML
+    public void editCommands(ActionEvent event) {
+
     }
 
     private void openTerminal(String id, String name, OpenerCallBack callBack) {
