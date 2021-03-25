@@ -13,24 +13,18 @@ import cloud.dest.terminal.variable.VariableService;
 import com.kodedu.terminalfx.TerminalTab;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class FXMLController {
+public class FXMLController implements CommandRunner {
 
     @FXML
     private StackPane termPane;
@@ -62,6 +56,7 @@ public class FXMLController {
         variableService = appData.getVariableService();
         configService = appData.getConfigService();
         commandCache = new ArrayList<>();
+        appData.setCommandRunner(this);
     }
 
     public void initialize() {
@@ -77,17 +72,7 @@ public class FXMLController {
     public void onEnter(KeyEvent event) {
         if (event.getCode() == KeyCode.ENTER) {
             String command = commandField.getText();
-            Optional<Command> alias = commandService.findAlias(appData.getEnvironment(), command);
-            if (alias.isPresent()) {
-                execCommandInRightTerminal(tabPane, alias.get());
-                commandField.setText("");
-            } else {
-                TerminalTab terminalTab = (TerminalTab) tabPane.getSelectionModel().getSelectedItem();
-                if (terminalTab != null) {
-                    commandService.sendCommand(terminalTab, command, this::resolveVariable);
-                    commandField.setText("");
-                }
-            }
+            runCommand(command);
         }
     }
 
@@ -121,6 +106,20 @@ public class FXMLController {
     @FXML
     public void editCommands(ActionEvent event) {
 
+    }
+
+    public void runCommand(String command) {
+        Optional<Command> alias = commandService.findAlias(appData.getEnvironment(), command);
+        if (alias.isPresent()) {
+            execCommandInRightTerminal(tabPane, alias.get());
+            commandField.setText("");
+        } else {
+            TerminalTab terminalTab = (TerminalTab) tabPane.getSelectionModel().getSelectedItem();
+            if (terminalTab != null) {
+                commandService.sendCommand(terminalTab, command, this::resolveVariable);
+                commandField.setText("");
+            }
+        }
     }
 
     private void openTerminal(String id, String name, OpenerCallBack callBack) {
@@ -229,4 +228,8 @@ public class FXMLController {
         }
     }
 
+    @Override
+    public void exec(String command) {
+        runCommand(command);
+    }
 }

@@ -34,6 +34,8 @@ public class AppData {
 
     private Environment environment;
 
+    private CommandRunner commandRunner;
+
     private AppData() {
         commandService = new CommandServiceImpl();
         variableService = new VariableServiceImpl();
@@ -48,6 +50,16 @@ public class AppData {
         environment = environmentService.initEnv("Default", DEFAULT_DIR);
         for (Config config : configs) {
             configService.loadConfig(environment, config);
+        }
+    }
+
+    public void setCommandRunner(CommandRunner commandRunner) {
+        this.commandRunner = commandRunner;
+    }
+
+    public void runCommand(String command) {
+        if (commandRunner != null) {
+            commandRunner.exec(command);
         }
     }
 
