@@ -18,7 +18,7 @@ import java.util.List;
 
 public class AppData {
 
-    private static final Path DEFAULT_DIR = Paths.get(System.getProperty("user.home"), ".cloud.dest.terminal", "profiles");
+    public static final Path DEFAULT_DIR = Paths.get(System.getProperty("user.home"), ".cloud.dest.terminal", "profiles");
 
     private final EnvironmentService environmentService;
 

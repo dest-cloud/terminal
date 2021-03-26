@@ -91,16 +91,12 @@ public class FXMLController implements CommandRunner {
 
     @FXML
     public void reloadConfig(ActionEvent event) {
-        appData.reloadEnv();
-        configs = loadConfigs(new ArrayList<>(), appData.getEnvironment().getDir());
-        configMenu.getItems().clear();
-        buildConfigMenu(configs, configMenu);
-        loadConfig();
+        reloadConfig();
     }
 
     @FXML
     public void editVars(ActionEvent event) {
-        new VarEditorWindow();
+        new VarEditorWindow(appData.getEnvironment().getVariableLists(), this::reloadConfig);
     }
 
     @FXML
@@ -226,6 +222,14 @@ public class FXMLController implements CommandRunner {
                 }
             });
         }
+    }
+
+    private void reloadConfig() {
+        appData.reloadEnv();
+        configs = loadConfigs(new ArrayList<>(), appData.getEnvironment().getDir());
+        configMenu.getItems().clear();
+        buildConfigMenu(configs, configMenu);
+        loadConfig();
     }
 
     @Override

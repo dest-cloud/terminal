@@ -50,7 +50,7 @@ public class VariableServiceImpl implements VariableService {
 
     @Override
     public VariableList loadVariables(Config config) {
-        VariableList variables = new VariableList();
+        VariableList variables = new VariableList(config);
         try {
             variables.setNewVariables(ParseJsonFile.readVariables(config.getAbsolutePath()));
         } catch (IOException e) {

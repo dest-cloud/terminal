@@ -19,8 +19,6 @@
     <orderEntry type="library" name="Maven: org.openjfx:javafx-base:mac:15.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-fxml:15.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-fxml:mac:15.0.1" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-swing:15.0.1" level="project" />
-    <orderEntry type="library" name="Maven: org.openjfx:javafx-swing:mac:15.0.1" level="project" />
     <orderEntry type="library" name="Maven: com.kodedu.terminalfx:terminalfx:1.1.0" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.pty4j:pty4j:0.8.6" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.jetbrains.pty4j:purejavacomm:0.0.11.1" level="project" />
