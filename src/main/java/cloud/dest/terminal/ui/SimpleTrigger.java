@@ -1,4 +1,4 @@
-package cloud.dest.terminal.ui.vareditor;
+package cloud.dest.terminal.ui;
 
 public interface SimpleTrigger {
 

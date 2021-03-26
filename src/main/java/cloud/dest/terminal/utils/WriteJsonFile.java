@@ -1,5 +1,6 @@
 package cloud.dest.terminal.utils;
 
+import cloud.dest.terminal.command.Command;
 import cloud.dest.terminal.variable.Variable;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,6 +19,12 @@ public class WriteJsonFile {
         ObjectMapper mapper = new ObjectMapper();
         ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
         writer.writeValue(new File(absoluteFile), variables);
+    }
+
+    public static void writeCommands(List<Command> commands, String absoluteFile) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
+        writer.writeValue(new File(absoluteFile), commands);
     }
 
 }

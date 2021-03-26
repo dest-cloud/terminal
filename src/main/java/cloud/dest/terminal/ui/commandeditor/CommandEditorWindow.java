@@ -1,5 +1,6 @@
-package cloud.dest.terminal.ui.vareditor;
+package cloud.dest.terminal.ui.commandeditor;
 
+import cloud.dest.terminal.command.CommandList;
 import cloud.dest.terminal.ui.SimpleTrigger;
 import cloud.dest.terminal.variable.VariableList;
 import javafx.fxml.FXMLLoader;
@@ -13,17 +14,17 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
-public class VarEditorWindow {
+public class CommandEditorWindow {
 
-    public VarEditorWindow(List<VariableList> lists, SimpleTrigger trigger) {
+    public CommandEditorWindow(List<CommandList> lists, SimpleTrigger trigger) {
         try {
-            URL resource = getClass().getResource("/cloud/dest/terminal/var_editor.fxml");
+            URL resource = getClass().getResource("/cloud/dest/terminal/command_editor.fxml");
             FXMLLoader loader = new FXMLLoader(resource);
 
             Parent root = loader.load();
 
-            VarEditorController controller = loader.getController();
-            controller.setVariableLists(lists);
+            CommandEditorController controller = loader.getController();
+            controller.setCommandLists(lists);
 
             Stage stage = new Stage(StageStyle.UTILITY);
             stage.initModality(Modality.WINDOW_MODAL);
@@ -33,7 +34,7 @@ public class VarEditorWindow {
 
             stage.setOnCloseRequest(event -> trigger.trigger());
 
-            stage.setTitle("Variable Editor");
+            stage.setTitle("Command Editor");
             stage.setScene(scene);
             stage.show();
 

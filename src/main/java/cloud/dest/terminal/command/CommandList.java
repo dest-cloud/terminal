@@ -5,9 +5,12 @@ import java.util.List;
 
 public class CommandList {
 
+    private String absolutePath;
+
     private List<Command> commands;
 
-    public CommandList() {
+    public CommandList(String absolutePath) {
+        this.absolutePath = absolutePath;
         commands = new ArrayList<>();
     }
 
@@ -17,5 +20,9 @@ public class CommandList {
 
     public List<Command> getCommands() {
         return commands;
+    }
+
+    public String getAbsolutePath() {
+        return absolutePath;
     }
 }

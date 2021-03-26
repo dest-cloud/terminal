@@ -15,7 +15,7 @@ public class CommandServiceImpl implements CommandService {
 
     @Override
     public CommandList loadCommands(String path) {
-        CommandList commands = new CommandList();
+        CommandList commands = new CommandList(path);
         try {
             commands.setNewList(ParseJsonFile.readCommands(path));
         } catch (IOException e) {

@@ -2,6 +2,7 @@ package cloud.dest.terminal.command;
 
 public class Command {
 
+    private String id;
     private String name;
     private String alias;
     private String command;
@@ -14,7 +15,8 @@ public class Command {
 
     }
 
-    public Command(String name, String alias, String command, String shellType, String consoleId, String execBefore, String execAfter) {
+    public Command(String id, String name, String alias, String command, String shellType, String consoleId, String execBefore, String execAfter) {
+        this.id = id;
         this.name = name;
         this.alias = alias;
         this.command = command;
@@ -22,6 +24,14 @@ public class Command {
         this.consoleId = consoleId;
         this.execBefore = execBefore;
         this.execAfter = execAfter;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {

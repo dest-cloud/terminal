@@ -7,6 +7,7 @@ import cloud.dest.terminal.config.ConfigService;
 import cloud.dest.terminal.terminal.OpenerCallBack;
 import cloud.dest.terminal.terminal.Terminal;
 import cloud.dest.terminal.terminal.TerminalService;
+import cloud.dest.terminal.ui.commandeditor.CommandEditorWindow;
 import cloud.dest.terminal.ui.vareditor.VarEditorWindow;
 import cloud.dest.terminal.variable.Variable;
 import cloud.dest.terminal.variable.VariableService;
@@ -101,7 +102,7 @@ public class FXMLController implements CommandRunner {
 
     @FXML
     public void editCommands(ActionEvent event) {
-
+        new CommandEditorWindow(appData.getEnvironment().getCommandLists(), this::reloadConfig);
     }
 
     public void runCommand(String command) {
