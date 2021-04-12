@@ -4,7 +4,7 @@
   <groupId>dest.cloud</groupId>
   <artifactId>terminal</artifactId>
   <name>terminal</name>
-  <version>1.1</version>
+  <version>1.2</version>
   <build>
     <plugins>
       <plugin>
@@ -147,6 +147,13 @@
     <repository>
       <id>terminalfx-repo</id>
       <url>https://github.com/javaterminal/terminalfx/raw/master/releases</url>
+    </repository>
+    <repository>
+      <snapshots>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
+      <id>SimpleNativeHooks-maven-export</id>
+      <url>https://raw.github.com/repeats/SimpleNativeHooks/maven-export/</url>
     </repository>
   </repositories>
   <properties>
