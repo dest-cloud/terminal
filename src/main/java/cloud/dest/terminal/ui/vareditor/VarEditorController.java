@@ -31,7 +31,7 @@ public class VarEditorController {
 //            Scene scene = new Scene(root);
 //            stage.setScene(scene);
             VarEditorTabController controller = loader.getController();
-            controller.setVariableList(variableLists.get(1));
+            variableLists.stream().findFirst().ifPresent(controller::setVariableList);
 
             varTab.getChildren().add(root);
         } catch (IOException e) {

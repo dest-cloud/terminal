@@ -10,6 +10,7 @@ import cloud.dest.terminal.terminal.TerminalService;
 import cloud.dest.terminal.ui.commandeditor.CommandEditorWindow;
 import cloud.dest.terminal.ui.vareditor.VarEditorWindow;
 import cloud.dest.terminal.variable.Variable;
+import cloud.dest.terminal.variable.VariableList;
 import cloud.dest.terminal.variable.VariableService;
 import com.kodedu.terminalfx.TerminalTab;
 import javafx.event.ActionEvent;
@@ -24,6 +25,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class FXMLController implements CommandRunner {
 
@@ -97,12 +99,14 @@ public class FXMLController implements CommandRunner {
 
     @FXML
     public void editVars(ActionEvent event) {
-        new VarEditorWindow(appData.getEnvironment().getVariableLists(), this::reloadConfig);
+        List<VariableList> variables = appData.getEnvironment().getVariableLists().stream().filter(var -> !var.getConfig().getConfig().equals("SYS_VAR")).map(variable -> variableService.loadVariables(variable.getConfig())).collect(Collectors.toList());
+        new VarEditorWindow(variables, this::reloadConfig);
     }
 
     @FXML
     public void editCommands(ActionEvent event) {
-        new CommandEditorWindow(appData.getEnvironment().getCommandLists(), this::reloadConfig);
+        List<CommandList> commands = appData.getEnvironment().getCommandLists().stream().map(command -> commandService.loadCommands(command.getAbsolutePath())).collect(Collectors.toList());
+        new CommandEditorWindow(commands, this::reloadConfig);
     }
 
     public void runCommand(String command) {
