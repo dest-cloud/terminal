@@ -1,11 +1,13 @@
-package cloud.dest.terminal;
+package cloud.dest.terminal.global_input;
 
+import cloud.dest.terminal.AppData;
+import cloud.dest.terminal.command.Command;
+import cloud.dest.terminal.command.CommandList;
 import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.control.TextField;
+import javafx.scene.control.ComboBox;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
-import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -16,9 +18,11 @@ import org.simplenativehooks.staticResources.BootStrapResources;
 import org.simplenativehooks.utilities.Function;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
-public class GlobalKeyListener {
+public class GlobalKeyListener implements ExecCommand {
 
     private boolean ctrl = false;
     private boolean alt = false;
@@ -28,8 +32,11 @@ public class GlobalKeyListener {
     private static final int ALT = 18;
     private static final int X = 88;
 
+    private Stage newWindow;
+
     public GlobalKeyListener() {
-       // Thread thread = new Thread(() -> {
+        final GlobalKeyListener keyListener = this;
+        // Thread thread = new Thread(() -> {
 
         try {
             BootStrapResources.extractResources();
@@ -58,32 +65,44 @@ public class GlobalKeyListener {
                 }
                 if (ctrl && alt && x) {
                     Platform.runLater(() -> {
-                        Stage newWindow = new Stage(StageStyle.UTILITY);
+                        newWindow = new Stage(StageStyle.UTILITY);
                         newWindow.setTitle("Exec command");
                         newWindow.initModality(Modality.APPLICATION_MODAL);
 
-                        TextField text = new TextField();
+//                        AutoCompletionTextField text = new AutoCompletionTextField();
+
+                        List<Command> commands = new ArrayList<>();
+                        for (CommandList commandList : AppData.instance.getEnvironment().getCommandLists()) {
+                            //                                commands.add(command.getName() + "(" + command.getAlias() + ")");
+                            commands.addAll(commandList.getCommands());
+                        }
+
+                        ComboBox<Command> text = new ComboBox<>();
+                        text.getItems().addAll(commands);
+//                        text.s
+                        new AutoCompleteBox(text, keyListener);
+
+//                        AutoCompleteTextField text = new AutoCompleteTextField(commands);
+////                        TextField text = new TextField();
                         text.setPromptText("Type a command");
                         text.setMinHeight(60);
                         text.setMinWidth(400);
                         text.setStyle("-fx-text-box-border: #242424;-fx-border-width: 5px; -fx-focus-color: #242424;");
-                        text.setFont(new Font(24));
+//                        text.setFont(new Font(24));
                         text.requestFocus();
-                        text.setOnKeyPressed(ke -> {
-                            if (ke.getCode().equals(KeyCode.ESCAPE)) {
-                                newWindow.close();
-                            }
-                            if (ke.getCode().equals(KeyCode.ENTER)) {
-                                String command = text.getText();
-                                newWindow.close();
-                                AppData.instance.runCommand(command);
-                            }
-                        });
+//                        text.setOnAction((event) -> {
+////                            int selectedIndex = text.getSelectionModel().getSelectedIndex();
+//                            Command command = text.getSelectionModel().getSelectedItem();
+//                            newWindow.close();
+//                            AppData.instance.runCommand(command.getAlias());
+//                        });
+
 
                         StackPane secondaryLayout = new StackPane();
                         secondaryLayout.getChildren().add(text);
 
                         Scene secondScene = new Scene(secondaryLayout);
+                        secondScene.getStylesheets().add(getClass().getResource("/cloud/dest/terminal/styles.css").toExternalForm());
 
                         newWindow.setAlwaysOnTop(true);
                         newWindow.setResizable(false);
@@ -113,8 +132,14 @@ public class GlobalKeyListener {
             }
         });
         key.startListening();
-       // });
-       // thread.start();
+        // });
+        // thread.start();
+    }
+
+    @Override
+    public void exec(Command command) {
+        newWindow.close();
+        AppData.instance.runCommand(command.getAlias());
     }
 }
 

@@ -3,6 +3,7 @@ package cloud.dest.terminal.command;
 import cloud.dest.terminal.environment.Environment;
 import cloud.dest.terminal.utils.ParseJsonFile;
 import cloud.dest.terminal.variable.Variable;
+import cloud.dest.terminal.variable.VariableList;
 import com.kodedu.terminalfx.TerminalTab;
 
 import java.io.IOException;
@@ -60,6 +61,14 @@ public class CommandServiceImpl implements CommandService {
             for (Variable var : vars) {
                 command.setCommand(command.getCommand().replace("${" + var.getVariable() + "}", var.getValue()));
             }
+        }
+        return commands;
+    }
+
+    @Override
+    public List<Command> replaceAllVars(List<VariableList> vars, List<Command> commands) {
+        for (VariableList variableList : vars) {
+            commands = replaceVars(variableList.getVariables(), commands);
         }
         return commands;
     }

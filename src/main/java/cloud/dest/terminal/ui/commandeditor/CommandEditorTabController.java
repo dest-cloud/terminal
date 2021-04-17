@@ -136,7 +136,7 @@ public class CommandEditorTabController {
         } else {
             command = new Command();
             buildCommand(command);
-            comList.getItems().add(command.getCommand());
+            comList.getItems().add(command.getName());
             commands.add(command);
             saveList();
             comList.getSelectionModel().selectLast();
@@ -158,8 +158,14 @@ public class CommandEditorTabController {
     private void newCom() {
         command = null;
         isEditing = false;
+        idField.setText("");
         nameField.setText("");
+        aliasField.setText("");
         commandArea.setText("");
+        shellField.setText("");
+        consoleIdField.setText("");
+        beforeField.setText("");
+        afterField.setText("");
         editButton.setText("Add");
         enableButtons();
     }

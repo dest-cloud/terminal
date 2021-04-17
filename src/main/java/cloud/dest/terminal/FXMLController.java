@@ -41,6 +41,9 @@ public class FXMLController implements CommandRunner {
     @FXML
     private Menu configMenu;
 
+    @FXML
+    private MenuBar menuBar;
+
     private final AppData appData;
     private final CommandService commandService;
     private final TerminalService terminalService;
@@ -123,6 +126,10 @@ public class FXMLController implements CommandRunner {
         }
     }
 
+    public MenuBar getMenuBar() {
+        return menuBar;
+    }
+
     private void openTerminal(String id, String name, OpenerCallBack callBack) {
         terminalService.openTerminal(appData.getEnvironment(), id, name, (terminal, isNew) -> {
             addClosingEvent(terminal);
@@ -138,7 +145,7 @@ public class FXMLController implements CommandRunner {
                 item = new MenuItem(config.getConfig());
                 item.setOnAction(t -> {
                     configService.loadConfig(appData.getEnvironment(), config);
-                    loadConfig();
+                    //loadConfig();
                 });
                 menu.getItems().add(item);
             } else {
@@ -198,24 +205,25 @@ public class FXMLController implements CommandRunner {
         Config config;
         if (files != null && files.length > 0) {
             for (File file : files) {
-                if (file.isDirectory()) {
-                    if (!file.getName().startsWith(".")) {
+                if (!file.isHidden()) {
+                    if (file.isDirectory()) {
                         config = new Config("dir", file.getName(), file.getAbsolutePath());
                         configs.add(config);
                         loadConfigs(config.getConfigs(), file.toPath());
+
+                    } else {
+                        configs.add(new Config("file", file.getName(), file.getAbsolutePath()));
                     }
-                } else {
-                    configs.add(new Config("file", file.getName(), file.getAbsolutePath()));
                 }
             }
         }
         return configs;
     }
 
-    private void loadConfig() {
+    public void loadConfig(List<CommandList> commandLists) {
         commandCache.clear();
         commandList.getItems().clear();
-        for (CommandList commands : appData.getEnvironment().getCommandLists()) {
+        for (CommandList commands : commandLists) {
             commands.getCommands().forEach(command -> {
                 commandList.getItems().add(command.getName() + " (" + command.getAlias() + ")");
                 commandCache.add(command);
@@ -234,7 +242,7 @@ public class FXMLController implements CommandRunner {
         configs = loadConfigs(new ArrayList<>(), appData.getEnvironment().getDir());
         configMenu.getItems().clear();
         buildConfigMenu(configs, configMenu);
-        loadConfig();
+        //loadConfig();
     }
 
     @Override

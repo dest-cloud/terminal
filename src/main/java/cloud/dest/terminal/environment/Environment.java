@@ -4,6 +4,7 @@ import cloud.dest.terminal.Config;
 import cloud.dest.terminal.command.CommandList;
 import cloud.dest.terminal.terminal.TerminalList;
 import cloud.dest.terminal.variable.VariableList;
+import cloud.dest.terminal.workspace.Workspace;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -13,14 +14,17 @@ public class Environment {
 
     private String id;
     private Path dir;
+
+    private Workspace workspace;
     private TerminalList terminalList;
     private List<Config> configs;
     private List<VariableList> variableLists;
     private List<CommandList> commandLists;
 
-    public Environment(String id, Path dir) {
+    public Environment(String id, Path dir, Workspace workspace) {
         this.id = id;
         this.dir = dir;
+        this.workspace = workspace;
         this.terminalList = new TerminalList();
         configs = new ArrayList<>();
         variableLists = new ArrayList<>();

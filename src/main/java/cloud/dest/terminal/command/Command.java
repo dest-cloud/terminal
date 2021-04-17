@@ -26,6 +26,17 @@ public class Command {
         this.execAfter = execAfter;
     }
 
+    public Command(String command) {
+        this.id = command;
+        this.name = command;
+        this.alias = command;
+        this.command = command;
+        this.shellType = null;
+        this.consoleId = null;
+        this.execBefore = null;
+        this.execAfter = null;
+    }
+
     public String getId() {
         return id;
     }
@@ -89,4 +100,5 @@ public class Command {
     public void setExecAfter(String execAfter) {
         this.execAfter = execAfter;
     }
+
 }

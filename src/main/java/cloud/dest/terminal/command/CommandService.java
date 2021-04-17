@@ -2,6 +2,7 @@ package cloud.dest.terminal.command;
 
 import cloud.dest.terminal.environment.Environment;
 import cloud.dest.terminal.variable.Variable;
+import cloud.dest.terminal.variable.VariableList;
 import com.kodedu.terminalfx.TerminalTab;
 
 import java.util.List;
@@ -16,5 +17,7 @@ public interface CommandService {
     Optional<Command> findAlias(Environment environment, String alias);
 
     List<Command> replaceVars(List<Variable> vars, List<Command> commands);
+
+    List<Command> replaceAllVars(List<VariableList> vars, List<Command> commands);
 
 }

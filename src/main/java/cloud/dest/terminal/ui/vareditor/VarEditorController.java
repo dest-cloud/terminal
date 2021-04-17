@@ -27,9 +27,6 @@ public class VarEditorController {
         try {
             FXMLLoader loader = new FXMLLoader(resource);
             root = loader.load();
-//            Stage stage = new Stage();
-//            Scene scene = new Scene(root);
-//            stage.setScene(scene);
             VarEditorTabController controller = loader.getController();
             variableLists.stream().findFirst().ifPresent(controller::setVariableList);
 

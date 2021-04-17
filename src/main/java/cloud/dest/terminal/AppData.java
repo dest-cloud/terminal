@@ -11,6 +11,8 @@ import cloud.dest.terminal.terminal.TerminalService;
 import cloud.dest.terminal.terminal.TerminalServiceImpl;
 import cloud.dest.terminal.variable.VariableService;
 import cloud.dest.terminal.variable.VariableServiceImpl;
+import cloud.dest.terminal.workspace.WorkspaceService;
+import cloud.dest.terminal.workspace.WorkspaceServiceImpl;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -18,7 +20,8 @@ import java.util.List;
 
 public class AppData {
 
-    public static final Path DEFAULT_DIR = Paths.get(System.getProperty("user.home"), ".cloud.dest.terminal", "profiles");
+    //    public static final Path DEFAULT_DIR = Paths.get(System.getProperty("user.home"), ".cloud.dest.terminal", "profiles");
+    public static final Path DEFAULT_DIR = Paths.get(System.getProperty("user.home"), ".cloud.dest.terminal", "workspace", "plaz.yaml");
 
     private final EnvironmentService environmentService;
 
@@ -27,6 +30,8 @@ public class AppData {
     private final TerminalService terminalService;
 
     private final VariableService variableService;
+
+    private final WorkspaceService workspaceService;
 
     private final ConfigService configService;
 
@@ -40,7 +45,8 @@ public class AppData {
         commandService = new CommandServiceImpl();
         variableService = new VariableServiceImpl();
         terminalService = new TerminalServiceImpl(variableService, commandService);
-        environmentService = new EnvironmentServiceImpl(variableService);
+        workspaceService = new WorkspaceServiceImpl();
+        environmentService = new EnvironmentServiceImpl(variableService, workspaceService, commandService);
         configService = new ConfigServiceImpl(variableService, commandService);
         environment = environmentService.initEnv("Default", DEFAULT_DIR);
     }
