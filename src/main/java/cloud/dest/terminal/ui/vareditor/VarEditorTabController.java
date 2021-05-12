@@ -2,7 +2,7 @@ package cloud.dest.terminal.ui.vareditor;
 
 import cloud.dest.terminal.AppData;
 import cloud.dest.terminal.Config;
-import cloud.dest.terminal.utils.WriteJsonFile;
+import cloud.dest.terminal.utils.WriteYAMLFile;
 import cloud.dest.terminal.variable.Variable;
 import cloud.dest.terminal.variable.VariableList;
 import javafx.event.ActionEvent;
@@ -163,7 +163,7 @@ public class VarEditorTabController {
 
     private void saveList() {
         try {
-            WriteJsonFile.writeVariables(variables, config.getAbsolutePath());
+            WriteYAMLFile.writeVariables(variables, config.getAbsolutePath());
         } catch (IOException e) {
             e.printStackTrace();
         }

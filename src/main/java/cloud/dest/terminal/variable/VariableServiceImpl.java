@@ -2,7 +2,7 @@ package cloud.dest.terminal.variable;
 
 import cloud.dest.terminal.Config;
 import cloud.dest.terminal.environment.Environment;
-import cloud.dest.terminal.utils.ParseJsonFile;
+import cloud.dest.terminal.utils.ParseYAMLFile;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -52,7 +52,7 @@ public class VariableServiceImpl implements VariableService {
     public VariableList loadVariables(Config config) {
         VariableList variables = new VariableList(config);
         try {
-            variables.setNewVariables(ParseJsonFile.readVariables(config.getAbsolutePath()));
+            variables.setNewVariables(ParseYAMLFile.readVariables(config.getAbsolutePath()));
         } catch (IOException e) {
             e.printStackTrace();
         }

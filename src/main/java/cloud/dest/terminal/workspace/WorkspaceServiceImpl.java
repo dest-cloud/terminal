@@ -1,6 +1,6 @@
 package cloud.dest.terminal.workspace;
 
-import cloud.dest.terminal.utils.ParseJsonFile;
+import cloud.dest.terminal.utils.ParseYAMLFile;
 
 import java.io.IOException;
 
@@ -10,7 +10,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     public Workspace loadWorkspace(String path) {
         Workspace workspace = null;
         try {
-            workspace = ParseJsonFile.readWorkspace(path);
+            workspace = ParseYAMLFile.readWorkspace(path);
         } catch (IOException e) {
             e.printStackTrace();
         }

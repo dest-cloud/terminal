@@ -1,7 +1,7 @@
 package cloud.dest.terminal.command;
 
 import cloud.dest.terminal.environment.Environment;
-import cloud.dest.terminal.utils.ParseJsonFile;
+import cloud.dest.terminal.utils.ParseYAMLFile;
 import cloud.dest.terminal.variable.Variable;
 import cloud.dest.terminal.variable.VariableList;
 import com.kodedu.terminalfx.TerminalTab;
@@ -18,7 +18,7 @@ public class CommandServiceImpl implements CommandService {
     public CommandList loadCommands(String path) {
         CommandList commands = new CommandList(path);
         try {
-            commands.setNewList(ParseJsonFile.readCommands(path));
+            commands.setNewList(ParseYAMLFile.readCommands(path));
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -11,19 +11,19 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
-public class ParseJsonFile {
+public class ParseYAMLFile {
 
-    private ParseJsonFile() {
+    private ParseYAMLFile() {
     }
 
     public static List<Command> readCommands(String absoluteFile) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
         URL url = new URL("file:" + absoluteFile);
         return Arrays.asList(objectMapper.readValue(url, Command[].class).clone());
     }
 
     public static List<Variable> readVariables(String absoluteFile) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
         URL url = new URL("file:" + absoluteFile);
         return Arrays.asList(objectMapper.readValue(url, Variable[].class).clone());
     }

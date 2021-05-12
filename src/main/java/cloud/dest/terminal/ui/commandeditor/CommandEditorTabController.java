@@ -3,7 +3,7 @@ package cloud.dest.terminal.ui.commandeditor;
 import cloud.dest.terminal.AppData;
 import cloud.dest.terminal.command.Command;
 import cloud.dest.terminal.command.CommandList;
-import cloud.dest.terminal.utils.WriteJsonFile;
+import cloud.dest.terminal.utils.WriteYAMLFile;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -196,12 +196,11 @@ public class CommandEditorTabController {
             upButton.setDisable(pos == 0);
             downButton.setDisable(pos == comList.getItems().size() - 1);
         }
-
     }
 
     private void saveList() {
         try {
-            WriteJsonFile.writeCommands(commands, absolutePath);
+            WriteYAMLFile.writeCommands(commands, absolutePath);
         } catch (IOException e) {
             e.printStackTrace();
         }
