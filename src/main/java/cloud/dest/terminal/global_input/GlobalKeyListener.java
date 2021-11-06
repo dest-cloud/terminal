@@ -72,7 +72,7 @@ public class GlobalKeyListener implements ExecCommand {
 //                        AutoCompletionTextField text = new AutoCompletionTextField();
 
                         List<Command> commands = new ArrayList<>();
-                        for (CommandList commandList : AppData.instance.getEnvironment().getCommandLists()) {
+                        for (CommandList commandList : AppData.instance.get(null).getEnvironment().getCommandLists()) {
                             //                                commands.add(command.getName() + "(" + command.getAlias() + ")");
                             commands.addAll(commandList.getCommands());
                         }
@@ -139,7 +139,7 @@ public class GlobalKeyListener implements ExecCommand {
     @Override
     public void exec(Command command) {
         newWindow.close();
-        AppData.instance.runCommand(command.getAlias());
+        AppData.instance.get(null).runCommand(command.getAlias());
     }
 }
 

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+
+<BorderPane prefHeight="180" prefWidth="460" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cloud.dest.terminal.NewLocationController">
+    <center>
+        <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <children>
+                <Label layoutY="14.0" prefHeight="17.0" prefWidth="105.0" text="Name" />
+                <Label layoutX="7.0" layoutY="35.0" prefHeight="17.0" prefWidth="116.0" text="Path" />
+            <TextField fx:id="name" layoutX="141.0" layoutY="10.0" />
+            <TextField fx:id="path" layoutX="141.0" layoutY="40.0" />
+            <Button id="openDialog" layoutX="291.0" layoutY="40.0" mnemonicParsing="false" onAction="#openDialog" text="Button" />
+            </children>
+        </AnchorPane>
+    </center>
+   <bottom>
+      <HBox alignment="CENTER_RIGHT" prefHeight="46.0" prefWidth="460.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button mnemonicParsing="false" text="Cancel" />
+            <Button mnemonicParsing="false" text="OK" onAction="#createLocation"/>
+         </children>
+      </HBox>
+   </bottom>
+</BorderPane>

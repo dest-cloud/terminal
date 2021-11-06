@@ -1,30 +1,32 @@
-package cloud.dest.terminal;
+package cloud.dest.terminal.ui;
 
-import cloud.dest.terminal.global_input.GlobalKeyListener;
-import javafx.application.Application;
+import cloud.dest.terminal.AppData;
+import cloud.dest.terminal.FXMLController;
+import cloud.dest.terminal.location.Location;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 
-public class MainApp extends Application {
+public class TerminalWindow {
 
-    @Override
-    public void start(Stage stage) throws Exception {
+    public TerminalWindow(Stage stage, Location location) throws IOException {
         URL resource = getClass().getResource("/cloud/dest/terminal/scene.fxml");
         FXMLLoader loader = new FXMLLoader(resource);
 
         Parent root = loader.load();
 
         FXMLController controller = loader.getController();
+        controller.setLocation(location);
 
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/cloud/dest/terminal/styles.css").toExternalForm());
 
-        stage.setTitle("Boris Grishenko@Terminal");
+        stage.setTitle(location.getName() + " | BG Console");
         stage.setScene(scene);
         stage.show();
 
@@ -33,7 +35,7 @@ public class MainApp extends Application {
             Platform.runLater(() -> {
                 System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Terminal");
                 controller.getMenuBar().setUseSystemMenuBar(true);
-                controller.loadConfig(AppData.instance.getEnvironment().getCommandLists());
+                controller.loadConfig(AppData.instance.get(location.getId()).getEnvironment().getCommandLists());
             });
         }
 
@@ -51,11 +53,6 @@ public class MainApp extends Application {
 //        }
 //
 //        GlobalScreen.addNativeKeyListener(new GlobalKeyListener());
-        new GlobalKeyListener();
+        //new GlobalKeyListener();
     }
-
-    public static void main(String[] args) {
-        launch(args);
-    }
-
 }

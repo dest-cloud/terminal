@@ -4,6 +4,7 @@ import cloud.dest.terminal.command.Command;
 import cloud.dest.terminal.command.CommandList;
 import cloud.dest.terminal.command.CommandService;
 import cloud.dest.terminal.config.ConfigService;
+import cloud.dest.terminal.location.Location;
 import cloud.dest.terminal.terminal.OpenerCallBack;
 import cloud.dest.terminal.terminal.Terminal;
 import cloud.dest.terminal.terminal.TerminalService;
@@ -45,31 +46,38 @@ public class FXMLController implements CommandRunner {
     private MenuBar menuBar;
 
     private final AppData appData;
-    private final CommandService commandService;
-    private final TerminalService terminalService;
-    private final VariableService variableService;
-    private final ConfigService configService;
+    private CommandService commandService;
+    private TerminalService terminalService;
+    private VariableService variableService;
+    private ConfigService configService;
 
     private TabPane tabPane;
 
     private List<Config> configs;
     private List<Command> commandCache;
 
+    private Location location;
+
     public FXMLController() {
         appData = AppData.instance;
-        commandService = appData.getCommandService();
-        terminalService = appData.getTerminalService();
-        variableService = appData.getVariableService();
-        configService = appData.getConfigService();
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+        commandService = appData.get(location.getId()).getCommandService();
+        terminalService = appData.get(location.getId()).getTerminalService();
+        variableService = appData.get(location.getId()).getVariableService();
+        configService = appData.get(location.getId()).getConfigService();
         commandCache = new ArrayList<>();
-        appData.setCommandRunner(this);
+        appData.get(location.getId()).setCommandRunner(this);
+        configs = loadConfigs(new ArrayList<>(), appData.get(location.getId()).getEnvironment().getDir());
+
+        buildConfigMenu(configs, configMenu);
     }
 
     public void initialize() {
         tabPane = new TabPane();
-        configs = loadConfigs(new ArrayList<>(), appData.getEnvironment().getDir());
 
-        buildConfigMenu(configs, configMenu);
 
         termPane.getChildren().add(tabPane);
     }
@@ -102,18 +110,18 @@ public class FXMLController implements CommandRunner {
 
     @FXML
     public void editVars(ActionEvent event) {
-        List<VariableList> variables = appData.getEnvironment().getVariableLists().stream().filter(var -> !var.getConfig().getConfig().equals("SYS_VAR")).map(variable -> variableService.loadVariables(variable.getConfig())).collect(Collectors.toList());
+        List<VariableList> variables = appData.get(location.getId()).getEnvironment().getVariableLists().stream().filter(var -> !var.getConfig().getConfig().equals("SYS_VAR")).map(variable -> variableService.loadVariables(variable.getConfig())).collect(Collectors.toList());
         new VarEditorWindow(variables, this::reloadConfig);
     }
 
     @FXML
     public void editCommands(ActionEvent event) {
-        List<CommandList> commands = appData.getEnvironment().getCommandLists().stream().map(command -> commandService.loadCommands(command.getAbsolutePath())).collect(Collectors.toList());
+        List<CommandList> commands = appData.get(location.getId()).getEnvironment().getCommandLists().stream().map(command -> commandService.loadCommands(command.getAbsolutePath())).collect(Collectors.toList());
         new CommandEditorWindow(commands, this::reloadConfig);
     }
 
     public void runCommand(String command) {
-        Optional<Command> alias = commandService.findAlias(appData.getEnvironment(), command);
+        Optional<Command> alias = commandService.findAlias(appData.get(location.getId()).getEnvironment(), command);
         if (alias.isPresent()) {
             execCommandInRightTerminal(tabPane, alias.get());
             commandField.setText("");
@@ -131,7 +139,7 @@ public class FXMLController implements CommandRunner {
     }
 
     private void openTerminal(String id, String name, OpenerCallBack callBack) {
-        terminalService.openTerminal(appData.getEnvironment(), id, name, (terminal, isNew) -> {
+        terminalService.openTerminal(appData.get(location.getId()).getEnvironment(), id, name, (terminal, isNew) -> {
             addClosingEvent(terminal);
             callBack.openerCallBack(terminal, isNew);
         }, this::resolveVariable);
@@ -144,7 +152,7 @@ public class FXMLController implements CommandRunner {
             if (config.getType().equals("file")) {
                 item = new MenuItem(config.getConfig());
                 item.setOnAction(t -> {
-                    configService.loadConfig(appData.getEnvironment(), config);
+                    configService.loadConfig(appData.get(location.getId()).getEnvironment(), config);
                     //loadConfig();
                 });
                 menu.getItems().add(item);
@@ -157,7 +165,7 @@ public class FXMLController implements CommandRunner {
     }
 
     private void execCommandInRightTerminal(TabPane tabPane, Command command) {
-        Optional<Variable> optTitle = variableService.findVar(appData.getEnvironment(), "TITLE:" + command.getConsoleId());
+        Optional<Variable> optTitle = variableService.findVar(appData.get(location.getId()).getEnvironment(), "TITLE:" + command.getConsoleId());
         String title = command.getConsoleId();
         if (optTitle.isPresent() && optTitle.get().getValue() != null && !optTitle.get().getValue().isBlank()) {
             title = optTitle.get().getValue();
@@ -177,7 +185,7 @@ public class FXMLController implements CommandRunner {
 
     private void addClosingEvent(Terminal terminal) {
         terminal.getTerminalTab().setOnCloseRequest(event1 -> {
-            terminalService.closeTerminal(appData.getEnvironment(), terminal);
+            terminalService.closeTerminal(appData.get(location.getId()).getEnvironment(), terminal);
         });
     }
 
@@ -238,8 +246,8 @@ public class FXMLController implements CommandRunner {
     }
 
     private void reloadConfig() {
-        appData.reloadEnv();
-        configs = loadConfigs(new ArrayList<>(), appData.getEnvironment().getDir());
+        appData.get(location.getId()).reloadEnv();
+        configs = loadConfigs(new ArrayList<>(), appData.get(location.getId()).getEnvironment().getDir());
         configMenu.getItems().clear();
         buildConfigMenu(configs, configMenu);
         //loadConfig();

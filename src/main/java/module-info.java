@@ -23,5 +23,6 @@ module terminal {
     exports cloud.dest.terminal.terminal;
     exports cloud.dest.terminal.environment;
     exports cloud.dest.terminal.global_input;
+    exports cloud.dest.terminal.location;
     opens cloud.dest.terminal.global_input to javafx.fxml;
 }
