@@ -7,14 +7,16 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.net.URL;
 
 public class TerminalWindow {
 
-    public TerminalWindow(Stage stage, Location location) throws IOException {
+    public TerminalWindow(Location location) throws IOException {
         URL resource = getClass().getResource("/cloud/dest/terminal/scene.fxml");
         FXMLLoader loader = new FXMLLoader(resource);
 
@@ -23,7 +25,10 @@ public class TerminalWindow {
         FXMLController controller = loader.getController();
         controller.setLocation(location);
 
+        Stage stage = new Stage(StageStyle.DECORATED);
+//        stage.initModality(Modality.);
         Scene scene = new Scene(root);
+        stage.setScene(scene);
         scene.getStylesheets().add(getClass().getResource("/cloud/dest/terminal/styles.css").toExternalForm());
 
         stage.setTitle(location.getName() + " | BG Console");
@@ -35,9 +40,11 @@ public class TerminalWindow {
             Platform.runLater(() -> {
                 System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Terminal");
                 controller.getMenuBar().setUseSystemMenuBar(true);
-                controller.loadConfig(AppData.instance.get(location.getId()).getEnvironment().getCommandLists());
+//                controller.loadConfig(AppData.instance.get(location.getId()).getEnvironment().getCommandLists());
             });
         }
+
+        controller.loadConfig(AppData.instance.get(location.getId()).getEnvironment().getCommandLists());
 
 //        try {
 //            Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());

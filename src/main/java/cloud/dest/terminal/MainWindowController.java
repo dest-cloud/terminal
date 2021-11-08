@@ -50,7 +50,7 @@ public class MainWindowController {
                 if (click.getClickCount() == 2) {
                     Location loc = locationCache.get(locationList.getSelectionModel().getSelectedIndex());
                     try {
-                        new TerminalWindow(stage, loc);
+                        new TerminalWindow(loc);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

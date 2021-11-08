@@ -7,6 +7,16 @@ public class WorkspaceVariable {
     private String namespace;
     private String path;
 
+    public WorkspaceVariable() {
+    }
+
+    public WorkspaceVariable(String id, String name, String namespace, String path) {
+        this.id = id;
+        this.name = name;
+        this.namespace = namespace;
+        this.path = path;
+    }
+
     public String getId() {
         return id;
     }

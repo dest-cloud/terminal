@@ -3,6 +3,8 @@ package cloud.dest.terminal;
 import cloud.dest.terminal.location.Location;
 import cloud.dest.terminal.utils.WriteYAMLFile;
 import cloud.dest.terminal.workspace.Workspace;
+import cloud.dest.terminal.workspace.WorkspaceCommand;
+import cloud.dest.terminal.workspace.WorkspaceVariable;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -66,10 +68,27 @@ public class NewLocationController {
 
             Location newLocation = new Location(UUID.randomUUID().toString(), strName, strPath);
             try {
+                Path commandPath = Paths.get(path.getText(), "commands");
+                Files.createDirectories(commandPath);
+                Path commandFilePath = Paths.get(commandPath.toString(), "commands.yaml");
+                WriteYAMLFile.writeCommands(new ArrayList<>(), commandFilePath.toString());
+
+                Path variablePath = Paths.get(path.getText(), "variables");
+                Files.createDirectories(variablePath);
+                Path variableFilePath = Paths.get(variablePath.toString(), "variables.yaml");
+                WriteYAMLFile.writeVariables(new ArrayList<>(), variableFilePath.toString());
+
+                workspace.setCommands(new ArrayList<>() {{
+                    add(new WorkspaceCommand(UUID.randomUUID().toString(), "Default commands", "default", commandFilePath.toString()));
+                }});
+                workspace.setVariables(new ArrayList<>() {{
+                    add(new WorkspaceVariable(UUID.randomUUID().toString(), "Default variables", "default", variableFilePath.toString()));
+                }});
                 WriteYAMLFile.writeWorkspace(workspace, Paths.get(path.getText(), "workspace.yaml").toString());
                 List<Location> locations = new ArrayList<>(MainWindowData.instance.getLocations());
                 locations.add(newLocation);
                 WriteYAMLFile.writeLocations(locations, MainWindowData.DEFAULT_LOCATION.toString());
+
                 MainWindowData.instance.reloadLocations();
                 mainWindowController.setLocationList(MainWindowData.instance.getLocations());
                 stage.close();
