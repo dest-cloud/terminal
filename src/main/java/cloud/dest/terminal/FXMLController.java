@@ -39,8 +39,8 @@ public class FXMLController implements CommandRunner {
     @FXML
     private TextField commandField;
 
-    @FXML
-    private Menu configMenu;
+//    @FXML
+//    private Menu configMenu;
 
     @FXML
     private MenuBar menuBar;
@@ -72,7 +72,7 @@ public class FXMLController implements CommandRunner {
         appData.get(location.getId()).setCommandRunner(this);
         configs = loadConfigs(new ArrayList<>(), appData.get(location.getId()).getEnvironment().getDir());
 
-        buildConfigMenu(configs, configMenu);
+//        buildConfigMenu(configs, configMenu);
     }
 
     public void initialize() {
@@ -248,9 +248,9 @@ public class FXMLController implements CommandRunner {
     private void reloadConfig() {
         appData.get(location.getId()).reloadEnv();
         configs = loadConfigs(new ArrayList<>(), appData.get(location.getId()).getEnvironment().getDir());
-        configMenu.getItems().clear();
-        buildConfigMenu(configs, configMenu);
-        //loadConfig();
+//        configMenu.getItems().clear();
+//        buildConfigMenu(configs, configMenu);
+        loadConfig(appData.get(location.getId()).getEnvironment().getCommandLists());
     }
 
     @Override

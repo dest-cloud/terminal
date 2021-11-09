@@ -47,8 +47,8 @@
                         <MenuItem onAction="#editCommands" mnemonicParsing="false" text="Commands"/>
                     </items>
                 </Menu>
-                <Menu fx:id="configMenu" mnemonicParsing="false" text="Configs">
-                </Menu>
+<!--                <Menu fx:id="configMenu" mnemonicParsing="false" text="Configs">-->
+<!--                </Menu>-->
             </menus>
         </MenuBar>
     </top>
