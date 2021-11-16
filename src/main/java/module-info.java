@@ -12,17 +12,17 @@ module terminal {
     requires simplenativehooks;
     requires javafx.base;
 
-    opens cloud.dest.terminal to javafx.fxml;
-    opens cloud.dest.terminal.ui.vareditor to javafx.fxml;
-    opens cloud.dest.terminal.ui.commandeditor to javafx.fxml;
-    opens cloud.dest.terminal.workspace to com.fasterxml.jackson.databind;
-    exports cloud.dest.terminal;
-    exports cloud.dest.terminal.variable;
-    exports cloud.dest.terminal.command;
-    exports cloud.dest.terminal.config;
-    exports cloud.dest.terminal.terminal;
-    exports cloud.dest.terminal.environment;
-    exports cloud.dest.terminal.global_input;
-    exports cloud.dest.terminal.location;
-    opens cloud.dest.terminal.global_input to javafx.fxml;
+    opens com.bgconsole.desktop to javafx.fxml;
+    opens com.bgconsole.desktop.ui.vareditor to javafx.fxml;
+    opens com.bgconsole.desktop.ui.commandeditor to javafx.fxml;
+    opens com.bgconsole.desktop.workspace to com.fasterxml.jackson.databind;
+    exports com.bgconsole.desktop;
+    exports com.bgconsole.desktop.variable;
+    exports com.bgconsole.desktop.command;
+    exports com.bgconsole.desktop.config;
+    exports com.bgconsole.desktop.terminal;
+    exports com.bgconsole.desktop.environment;
+    exports com.bgconsole.desktop.global_input;
+    exports com.bgconsole.desktop.location;
+    opens com.bgconsole.desktop.global_input to javafx.fxml;
 }

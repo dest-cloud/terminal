@@ -1,0 +1,24 @@
+package com.bgconsole.desktop.variable;
+
+import com.bgconsole.desktop.Config;
+import com.bgconsole.desktop.environment.Environment;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface VariableService {
+
+    String SYS_HOME_DIR = "SYS_HOME_DIR";
+
+    String SYS_FILE_SEPARATOR = "SYS_FILE_SEP";
+
+    String SYS_NEW_LINE = "SYS_RET";
+
+    List<Variable> getSystemVariable();
+
+    Optional<Variable> findVar(Environment environment, String var);
+
+    List<Variable> findVars(Environment environment, String var);
+
+    VariableList loadVariables(Config config);
+}

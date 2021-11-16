@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+
+<BorderPane prefHeight="95.0" prefWidth="460" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.bgconsole.desktop.NewLocationController">
+    <center>
+        <AnchorPane prefHeight="45.0" prefWidth="460.0" BorderPane.alignment="CENTER">
+            <children>
+                <Label layoutX="12.0" layoutY="14.0" prefHeight="17.0" prefWidth="105.0" text="Name" />
+                <Label layoutX="12.0" layoutY="41.0" prefHeight="17.0" prefWidth="116.0" text="Path" />
+                <TextField fx:id="name" layoutX="57.0" layoutY="10.0" prefHeight="25.0" prefWidth="321.0" />
+                <TextField fx:id="path" layoutX="56.0" layoutY="39.0" prefHeight="25.0" prefWidth="322.0" />
+                <Button id="openDialog" layoutX="394.0" layoutY="40.0" mnemonicParsing="false" onAction="#openDialog" text="Browse" />
+            </children>
+        </AnchorPane>
+    </center>
+    <bottom>
+        <Pane prefHeight="43.0" prefWidth="460.0" BorderPane.alignment="CENTER">
+            <children>
+                <Button layoutX="357.0" layoutY="9.0" mnemonicParsing="false" onAction="#closeWindow" text="Cancel" />
+                <Button layoutX="418.0" layoutY="9.0" mnemonicParsing="false" onAction="#createLocation" text="OK" />
+            </children>
+        </Pane>
+    </bottom>
+</BorderPane>
